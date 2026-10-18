@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analizador de representación de datos</title>
+<style>
+  body {
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    max-width: 760px;
+    margin: 36px auto;
+    padding: 0 16px;
+    color: #222;
+    line-height: 1.5;
+    background: #fafafa;
+  }
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+    color: #1a237e;
+  }
+  p.subtitulo {
+    color: #666;
+    margin-bottom: 28px;
+    font-size: 0.95rem;
+  }
+  .card {
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 26px;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  }
+  h2 {
+    font-size: 1.15rem;
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: #1a237e;
+    border-bottom: 2px solid #e8eaf6;
+    padding-bottom: 8px;
+  }
+  label {
+    display: block;
+    margin: 8px 0 4px;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  input[type="text"], select, textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 0.95rem;
+  }
+  textarea {
+    height: 90px;
+    resize: vertical;
+  }
+  button {
+    margin-top: 14px;
+    padding: 10px 20px;
+    background: #1a73e8;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  button:hover {
+    background: #155ab4;
+  }
+  .separador {
+    height: 1px;
+    background: #ddd;
+    margin: 34px 0;
+  }
+  .error {
+    color: #b71c1c;
+    background: #ffebee;
+    border: 1px solid #ef9a9a;
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin: 10px 0;
+    font-size: 0.95rem;
+  }
+  .error ul {
+    margin: 6px 0 0 0;
+    padding-left: 18px;
+  }
+  .resultado {
+    background: #e8f5e9;
+    border: 1px solid #c8e6c9;
+    padding: 16px;
+    border-radius: 8px;
+    margin-top: 14px;
+  }
+  .resultado h3 {
+    margin-top: 0;
+    font-size: 1rem;
+    color: #2e7d32;
+    margin-bottom: 10px;
+  }
+  .resultado table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 0.95rem;
+  }
+  .resultado th, .resultado td {
+    border: 1px solid #a5d6a7;
+    padding: 6px 10px;
+    text-align: left;
+  }
+  .resultado th {
+    background: #c8e6c9;
+    font-weight: 700;
+    color: #1b5e20;
+  }
+  .bytes {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+  }
+  .muted {
+    color: #666;
+    font-size: 0.9rem;
+  }
+  .campo-ayuda {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Analizador de representación de datos</h1>
+<p class="subtitulo">Sistemas numéricos, codificación de caracteres y ejecución en contenedores.</p>
+
+<!-- Formulario 1: conversión de sistemas numéricos -->
+<div class="card">
+  <form method="post">
+    <h2>1. Convertir número entre bases</h2>
+    <label for="id_numero">Número</label>
+    {{ conversion_form.numero }}
+    <p class="campo-ayuda">Sólo dígitos válidos para la base elegida. Rango permitido: 0 a 65 535.</p>
+
+    <label for="id_base_origen">Base de origen</label>
+    {{ conversion_form.base_origen }}
+
+    <button type="submit" name="convertir" value="1">Convertir</button>
+  </form>
+
+  {% if conversion_errores %}
+    <div class="error">
+      <ul>
+        {% for error in conversion_errores %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if conversion_resultado %}
+    <div class="resultado">
+      <h3>Resultado de la conversión</h3>
+      <p><strong>Valor original:</strong> {{ conversion_resultado.valor_original }} &nbsp;
+         (base {{ conversion_resultado.base_origen }})</p>
+      <table>
+        <tr><th>Decimal</th><td>{{ conversion_resultado.decimal }}</td></tr>
+        <tr><th>Binario (ajustado al byte)</th><td class="bytes">{{ conversion_resultado.binario }}</td></tr>
+        <tr><th>Octal</th><td>{{ conversion_resultado.octal }}</td></tr>
+        <tr><th>Hexadecimal</th><td>{{ conversion_resultado.hexadecimal }}</td></tr>
+        <tr><th>Bits significativos</th><td>{{ conversion_resultado.bits_significativos }}</td></tr>
+        <tr><th>Bytes necesarios</th><td>{{ conversion_resultado.bytes }}</td></tr>
+      </table>
+      <p class="muted">El binario se rellena con ceros hasta el siguiente límite de byte (8, 16, 24 bits…).</p>
+    </div>
+  {% endif %}
+</div>
+
+<div class="separador"></div>
+
+<!-- Formulario 2: análisis de texto y UTF-8 -->
+<div class="card">
+  <form method="post">
+    <h2>2. Analizar texto (máximo 20 caracteres)</h2>
+    <label for="id_texto">Texto</label>
+    {{ texto_form.texto }}
+    <p class="campo-ayuda">Ejemplo: Hola mundo ñ — se muestra cada carácter con su código decimal, punto U+, hexadecimal y bytes UTF-8.</p>
+
+    <button type="submit" name="analizar_texto" value="1">Analizar texto</button>
+  </form>
+
+  {% if texto_errores %}
+    <div class="error">
+      <ul>
+        {% for error in texto_errores %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if texto_caracteres %}
+    <h3>Análisis de texto ({{ texto_caracteres|length }} carácter(es))</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Carácter</th>
+          <th>Código decimal</th>
+          <th>Punto de código U+</th>
+          <th>Hexadecimal</th>
+          <th>Bytes UTF-8</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in texto_caracteres %}
+          <tr>
+            <td>{{ c.caracter }}</td>
+            <td>{{ c.decimal }}</td>
+            <td>{{ c.punto_codigo }}</td>
+            <td>{{ c.hexadecimal }}</td>
+            <td class="bytes">{{ c.bytes_utf8 }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</div>
+
+</body>
+</html>

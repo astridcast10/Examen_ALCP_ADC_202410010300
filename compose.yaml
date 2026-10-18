@@ -1,0 +1,18 @@
+services:
+  analizador:
+    build: .
+    image: analizador-datos:latest
+    container_name: analizador-datos
+    ports:
+      - "8000:8000"
+    # Límite de memoria: 256 MB
+    mem_limit: 256m
+    # Límite de CPU: 1 CPU
+    cpus: "1"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "1"
+    environment:
+      - DEBUG=True
