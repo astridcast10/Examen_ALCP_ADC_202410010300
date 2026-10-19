@@ -1,6 +1,3 @@
-Copia y pega esto en el editor de GitHub:
-
-```
 # Analizador de representación de datos
 
 Aplicación web con Python y Django para convertir números entre bases y analizar texto en UTF-8.
