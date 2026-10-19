@@ -67,8 +67,3 @@ Ver el consumo de recursos:
 ```
 docker stats analizador-datos --no-stream
 ```
-
-## Repositorio
-
-https://github.com/astridcast10/Examen_ALCP_ADC_202410010300
-```
