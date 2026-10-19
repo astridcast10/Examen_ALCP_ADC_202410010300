@@ -17,7 +17,6 @@ VALOR_MAXIMO = 65535
 
 
 class ConversionForm(forms.Form):
-    """Formulario para convertir un número de una base a decimal/binario/octal/hex."""
 
     numero = forms.CharField(
         label="Número",
@@ -85,7 +84,6 @@ class ConversionForm(forms.Form):
 
 
 class TextoForm(forms.Form):
-    """Formulario para analizar un texto carácter por carácter (UTF-8)."""
 
     texto = forms.CharField(
         label="Texto",
@@ -98,7 +96,7 @@ class TextoForm(forms.Form):
         widget=forms.Textarea(
             attrs={
                 "rows": 3,
-                "placeholder": "Ej. Hola mundo ñ",
+                "placeholder": "Escribe aquí el texto",
                 "maxlength": "20",
             }
         ),

@@ -3,7 +3,6 @@ from django.urls import reverse
 
 
 class AnalizadorTests(TestCase):
-    """Pruebas automatizadas del analizador de representación de datos."""
 
     def post_conversion(self, numero, base):
         return self.client.post(

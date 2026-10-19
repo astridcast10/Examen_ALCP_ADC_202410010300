@@ -3,17 +3,10 @@ from django.shortcuts import render
 from .forms import ConversionForm, TextoForm
 
 
-# Cantidad de bits que se redondean hacia el siguiente límite de byte (8, 16, 24, ...)
 BITS_POR_BYTE = 8
 
 
 def analizar_numero(valor, base):
-    """Convierte un número de una base dada y devuelve (errores, resultado).
-
-    errores: lista de mensajes de texto (vacía si todo fue válido).
-    resultado: dict con decimal, binario ajustado, octal, hexadecimal,
-               bits significativos y bytes necesarios; None si hubo errores.
-    """
     errores = []
 
     if not valor or not valor.strip():
@@ -76,7 +69,6 @@ def analizar_numero(valor, base):
 
 
 def analizar_texto(texto):
-    """Devuelve una lista con el desglose UTF-8 de cada carácter del texto."""
     caracteres = []
     for caracter in texto:
         codigo = ord(caracter)
@@ -134,7 +126,6 @@ def index(request):
 
 
 def _errores_formulario(form):
-    """Convierte los errores de un formulario en una lista de mensajes legibles."""
     mensajes = []
     for campo, errores in form.errors.items():
         etiqueta = form[campo].label if campo != "__all__" else ""

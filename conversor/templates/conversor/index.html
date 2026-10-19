@@ -5,54 +5,81 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Analizador de representación de datos</title>
 <style>
+  :root {
+    --papel: #f7f3ec;
+    --tinta: #3d3d3d;
+    --suave: #6e6e6e;
+    --tierra: #8c6d52;
+    --tierra-oscura: #6d4f38;
+    --linea: #d9d1c4;
+    --resultado: #efeae2;
+    --error: #9c4a4a;
+    --fondo-error: #fbe9e9;
+  }
+  * { box-sizing: border-box; }
   body {
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    max-width: 760px;
-    margin: 36px auto;
-    padding: 0 16px;
-    color: #222;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    background: var(--papel);
+    color: var(--tinta);
+    margin: 0;
+    padding: 40px 20px;
     line-height: 1.5;
-    background: #fafafa;
+  }
+  .contenedor {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  header {
+    margin-bottom: 44px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--linea);
   }
   h1 {
-    font-size: 1.6rem;
-    margin-bottom: 8px;
-    color: #1a237e;
+    font-size: 1.5rem;
+    margin: 0 0 6px 0;
+    color: var(--tinta);
+    font-weight: 500;
+    letter-spacing: -0.2px;
   }
-  p.subtitulo {
-    color: #666;
-    margin-bottom: 28px;
-    font-size: 0.95rem;
+  .lema {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--suave);
+    font-weight: 400;
   }
-  .card {
-    border: 1px solid #ccc;
-    border-radius: 12px;
-    padding: 22px;
-    margin-bottom: 26px;
-    background: #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  .bloque {
+    margin-bottom: 40px;
+  }
+  /* Dos columnas cuando hay resultado: formulario izquierda, tabla derecha */
+  .doble {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    align-items: start;
   }
   h2 {
-    font-size: 1.15rem;
-    margin-top: 0;
-    margin-bottom: 16px;
-    color: #1a237e;
-    border-bottom: 2px solid #e8eaf6;
-    padding-bottom: 8px;
+    font-size: 1.05rem;
+    margin: 0 0 14px 0;
+    color: var(--tierra-oscura);
+    font-weight: 600;
+    border-left: 4px solid var(--tierra);
+    padding-left: 10px;
   }
   label {
     display: block;
-    margin: 8px 0 4px;
+    margin: 10px 0 5px;
+    font-size: 0.92rem;
     font-weight: 600;
-    font-size: 0.95rem;
+    color: var(--tinta);
   }
   input[type="text"], select, textarea {
     width: 100%;
     padding: 8px 10px;
-    border: 1px solid #bbb;
-    border-radius: 6px;
-    box-sizing: border-box;
-    font-size: 0.95rem;
+    border: 1px solid var(--linea);
+    border-radius: 4px;
+    font-size: 0.92rem;
+    color: var(--tinta);
+    background: #fff;
   }
   textarea {
     height: 90px;
@@ -60,175 +87,180 @@
   }
   button {
     margin-top: 14px;
-    padding: 10px 20px;
-    background: #1a73e8;
+    padding: 9px 20px;
+    background: var(--tierra);
     color: #fff;
-    border: none;
-    border-radius: 6px;
+    border: 1px solid var(--tierra-oscura);
+    border-radius: 4px;
     cursor: pointer;
+    font-size: 0.92rem;
     font-weight: 600;
-    font-size: 0.95rem;
   }
   button:hover {
-    background: #155ab4;
+    background: var(--tierra-oscura);
   }
-  .separador {
-    height: 1px;
-    background: #ddd;
-    margin: 34px 0;
+  .ayuda {
+    font-size: 0.82rem;
+    color: var(--suave);
+    margin-top: 5px;
   }
   .error {
-    color: #b71c1c;
-    background: #ffebee;
-    border: 1px solid #ef9a9a;
-    padding: 10px 14px;
-    border-radius: 6px;
-    margin: 10px 0;
-    font-size: 0.95rem;
+    background: var(--fondo-error);
+    border: 1px solid #dcc7c7;
+    color: var(--error);
+    padding: 9px 13px;
+    border-radius: 4px;
+    margin: 12px 0;
+    font-size: 0.88rem;
   }
-  .error ul {
-    margin: 6px 0 0 0;
-    padding-left: 18px;
-  }
+  .error ul { margin: 4px 0 0; padding-left: 16px; }
   .resultado {
-    background: #e8f5e9;
-    border: 1px solid #c8e6c9;
-    padding: 16px;
-    border-radius: 8px;
-    margin-top: 14px;
+    margin-top: 0;
+    background: var(--resultado);
+    border: 1px solid var(--linea);
+    border-radius: 4px;
+    padding: 14px;
   }
   .resultado h3 {
-    margin-top: 0;
-    font-size: 1rem;
-    color: #2e7d32;
-    margin-bottom: 10px;
+    margin: 0 0 10px 0;
+    font-size: 0.95rem;
+    color: var(--tierra-oscura);
+    font-weight: 600;
   }
   .resultado table {
     width: 100%;
     border-collapse: collapse;
+    font-size: 0.9rem;
     margin-top: 8px;
-    font-size: 0.95rem;
   }
   .resultado th, .resultado td {
-    border: 1px solid #a5d6a7;
+    border: 1px solid var(--linea);
     padding: 6px 10px;
     text-align: left;
   }
   .resultado th {
-    background: #c8e6c9;
-    font-weight: 700;
-    color: #1b5e20;
+    background: #e4ddd1;
+    font-weight: 600;
+    color: var(--tinta);
   }
-  .bytes {
+  .mono {
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 0.95rem;
-  }
-  .muted {
-    color: #666;
     font-size: 0.9rem;
   }
-  .campo-ayuda {
-    font-size: 0.85rem;
-    color: #666;
-    margin-top: 4px;
+  .sep {
+    border: none;
+    border-top: 1px solid var(--linea);
+    margin: 44px 0;
+  }
+  /* En móviles apilar todo en una columna */
+  @media (max-width: 640px) {
+    .doble {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 </head>
 <body>
 
-<h1>Analizador de representación de datos</h1>
-<p class="subtitulo">Sistemas numéricos, codificación de caracteres y ejecución en contenedores.</p>
+<div class="contenedor">
 
-<!-- Formulario 1: conversión de sistemas numéricos -->
-<div class="card">
-  <form method="post">
-    <h2>1. Convertir número entre bases</h2>
-    <label for="id_numero">Número</label>
-    {{ conversion_form.numero }}
-    <p class="campo-ayuda">Sólo dígitos válidos para la base elegida. Rango permitido: 0 a 65 535.</p>
+  <header>
+    <h1>Analizador de representación de datos</h1>
+    <p class="lema">Sistemas numéricos y codificación de caracteres.</p>
+  </header>
 
-    <label for="id_base_origen">Base de origen</label>
-    {{ conversion_form.base_origen }}
+  <!-- Formulario 1: conversión de sistemas numéricos -->
+  <div class="bloque {% if conversion_resultado %}doble{% endif %}">
+    <form method="post">
+      <h2>Convertir número entre bases</h2>
+      <label for="id_numero">Número</label>
+      {{ conversion_form.numero }}
+      <p class="ayuda">Sólo dígitos válidos para la base elegida. Rango: 0 a 65 535.</p>
 
-    <button type="submit" name="convertir" value="1">Convertir</button>
-  </form>
+      <label for="id_base_origen">Base de origen</label>
+      {{ conversion_form.base_origen }}
 
-  {% if conversion_errores %}
-    <div class="error">
-      <ul>
-        {% for error in conversion_errores %}
-          <li>{{ error }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
+      <button type="submit" name="convertir" value="1">Convertir</button>
+    </form>
 
-  {% if conversion_resultado %}
-    <div class="resultado">
-      <h3>Resultado de la conversión</h3>
-      <p><strong>Valor original:</strong> {{ conversion_resultado.valor_original }} &nbsp;
-         (base {{ conversion_resultado.base_origen }})</p>
-      <table>
-        <tr><th>Decimal</th><td>{{ conversion_resultado.decimal }}</td></tr>
-        <tr><th>Binario (ajustado al byte)</th><td class="bytes">{{ conversion_resultado.binario }}</td></tr>
-        <tr><th>Octal</th><td>{{ conversion_resultado.octal }}</td></tr>
-        <tr><th>Hexadecimal</th><td>{{ conversion_resultado.hexadecimal }}</td></tr>
-        <tr><th>Bits significativos</th><td>{{ conversion_resultado.bits_significativos }}</td></tr>
-        <tr><th>Bytes necesarios</th><td>{{ conversion_resultado.bytes }}</td></tr>
-      </table>
-      <p class="muted">El binario se rellena con ceros hasta el siguiente límite de byte (8, 16, 24 bits…).</p>
-    </div>
-  {% endif %}
-</div>
+    {% if conversion_errores %}
+      <div class="error">
+        <ul>
+          {% for error in conversion_errores %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
 
-<div class="separador"></div>
+    {% if conversion_resultado %}
+      <div class="resultado">
+        <h3>Resultado</h3>
+        <table>
+          <tr><th>Valor original</th><td>{{ conversion_resultado.valor_original }} (base {{ conversion_resultado.base_origen }})</td></tr>
+          <tr><th>Decimal</th><td>{{ conversion_resultado.decimal }}</td></tr>
+          <tr><th>Binario</th><td class="mono">{{ conversion_resultado.binario }}</td></tr>
+          <tr><th>Octal</th><td>{{ conversion_resultado.octal }}</td></tr>
+          <tr><th>Hexadecimal</th><td class="mono">{{ conversion_resultado.hexadecimal }}</td></tr>
+          <tr><th>Bits significativos</th><td>{{ conversion_resultado.bits_significativos }}</td></tr>
+          <tr><th>Bytes necesarios</th><td>{{ conversion_resultado.bytes }}</td></tr>
+        </table>
+      </div>
+    {% endif %}
+  </div>
 
-<!-- Formulario 2: análisis de texto y UTF-8 -->
-<div class="card">
-  <form method="post">
-    <h2>2. Analizar texto (máximo 20 caracteres)</h2>
-    <label for="id_texto">Texto</label>
-    {{ texto_form.texto }}
-    <p class="campo-ayuda">Ejemplo: Hola mundo ñ — se muestra cada carácter con su código decimal, punto U+, hexadecimal y bytes UTF-8.</p>
+  <hr class="sep">
 
-    <button type="submit" name="analizar_texto" value="1">Analizar texto</button>
-  </form>
+  <!-- Formulario 2: análisis de texto y UTF-8 -->
+  <div class="bloque {% if texto_caracteres %}doble{% endif %}">
+    <form method="post">
+      <h2>Analizar texto (máximo 20 caracteres)</h2>
+      <label for="id_texto">Texto</label>
+      {{ texto_form.texto }}
+      <p class="ayuda">Cada carácter se desglosa en decimal, punto U+, hexadecimal y bytes UTF-8.</p>
 
-  {% if texto_errores %}
-    <div class="error">
-      <ul>
-        {% for error in texto_errores %}
-          <li>{{ error }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
+      <button type="submit" name="analizar_texto" value="1">Analizar</button>
+    </form>
 
-  {% if texto_caracteres %}
-    <h3>Análisis de texto ({{ texto_caracteres|length }} carácter(es))</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Carácter</th>
-          <th>Código decimal</th>
-          <th>Punto de código U+</th>
-          <th>Hexadecimal</th>
-          <th>Bytes UTF-8</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for c in texto_caracteres %}
-          <tr>
-            <td>{{ c.caracter }}</td>
-            <td>{{ c.decimal }}</td>
-            <td>{{ c.punto_codigo }}</td>
-            <td>{{ c.hexadecimal }}</td>
-            <td class="bytes">{{ c.bytes_utf8 }}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% endif %}
+    {% if texto_errores %}
+      <div class="error">
+        <ul>
+          {% for error in texto_errores %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    {% if texto_caracteres %}
+      <div class="resultado">
+        <h3>Análisis de texto ({{ texto_caracteres|length }} carácter(es))</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Carácter</th>
+              <th>Decimal</th>
+              <th>U+</th>
+              <th>Hexadecimal</th>
+              <th>Bytes UTF-8</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in texto_caracteres %}
+              <tr>
+                <td class="mono">{{ c.caracter }}</td>
+                <td>{{ c.decimal }}</td>
+                <td>{{ c.punto_codigo }}</td>
+                <td class="mono">{{ c.hexadecimal }}</td>
+                <td class="mono">{{ c.bytes_utf8 }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+  </div>
+
 </div>
 
 </body>

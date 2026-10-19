@@ -1,7 +1,3 @@
-"""
-Configuración de Django para el proyecto Analizador de representación de datos.
-"""
-
 import os
 from pathlib import Path
 

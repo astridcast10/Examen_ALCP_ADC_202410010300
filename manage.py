@@ -1,12 +1,10 @@
 #!/usr/bin/env python
-"""Punto de entrada de Django para el proyecto analizador."""
 
 import os
 import sys
 
 
 def main():
-    """Ejecuta tareas administrativas de Django."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "analizador.settings")
     try:
         from django.core.management import execute_from_command_line

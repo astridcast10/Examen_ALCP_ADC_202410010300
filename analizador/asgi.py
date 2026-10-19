@@ -1,7 +1,3 @@
-"""
-Configuración ASGI para el proyecto analizador.
-"""
-
 import os
 
 from django.core.asgi import get_asgi_application
